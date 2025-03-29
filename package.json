@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate": "prisma generate",
-    "migrate": "prisma migrate dev"
+    "migrate": "prisma migrate dev",
+    "host": "ngrok http --url=handy-quetzal-mighty.ngrok-free.app 3000"
   },
   "dependencies": {
     "@auth/neon-adapter": "^1.8.0",
@@ -26,6 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "ngrok": "^5.0.0-beta.2",
     "prisma": "^6.5.0",
     "tailwindcss": "^4",
     "typescript": "^5"
