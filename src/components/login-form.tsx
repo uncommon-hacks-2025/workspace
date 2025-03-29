@@ -24,7 +24,7 @@ export function LoginForm({
         className={'text-center'}
         >
               
-              <Button className="w-full py-8 border border-transparent hover:border-black transition-colors relative">
+              <Button className="font-semibold text-md w-full py-8 border border-transparent hover:border-black transition-colors relative">
                 <Image
                 src={'/logos/auth0.svg'}
                 alt={'Auth0 Logo'}
