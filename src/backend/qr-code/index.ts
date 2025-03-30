@@ -14,11 +14,13 @@ export async function getQrCode(userId: string): Promise<QRCode | null> {
   });
 }
 
-export async function getQrCodeWithUuid(_uuid: string): Promise<QRCode | null> {
+export async function getQrCodeWithUuid(_uuid: string) {
     return prisma.qRCode.findFirst({
+        select: undefined, // Select all fields of the QRCode
       where: {
         uuid: _uuid, // Use the UUID to find the QR code
       },
+      
     });
   }
 
