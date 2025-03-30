@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { User } from "@prisma/client";
+// import { User } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 
 type Entry = {
@@ -13,7 +13,7 @@ type Entry = {
     symptomsHad?: string;
     sleep?: number;
     otherNotes?: string;
-    User?: User;
+    userId?: string;
 };
 
 export default function JournalEntries() {
