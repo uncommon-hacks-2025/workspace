@@ -46,6 +46,7 @@ export default async function QRCodePage() {
 
   return (
     <QRCodeComponent
+    allowEditing={true}
     link={`${process.env.BASE_URL}/qr/${qrCode.uuid}`} // This should be the route to handle QR code scanning
     value={qrCode} // Pass the user ID or any other unique identifier as the value for the QR code
     />

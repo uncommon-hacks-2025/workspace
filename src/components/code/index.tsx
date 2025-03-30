@@ -15,9 +15,10 @@ import { useRouter } from "next/navigation";
 type QRCodeComponentProps = {
     value: QRCodeModel; // The value to encode in the QR code
     link: string; // The link to navigate to when the QR code is scanned
+    allowEditing?: boolean; // Optional prop to control if the QR code can be edited
 };
 
-export default function QRCodeComponent({ link, value }: QRCodeComponentProps) {
+export default function QRCodeComponent({ link, value, allowEditing = false }: QRCodeComponentProps) {
   const router = useRouter(); // Use the Next.js router for navigation
     const [privacyModalOpen, setPrivacyModalOpen] =
     useState(false); // State to control the privacy modal visibility
@@ -88,11 +89,15 @@ export default function QRCodeComponent({ link, value }: QRCodeComponentProps) {
        className={'flex flex-row gap-4 justify-center mt-4'}
        >
           <Button
-          variant={'solid'}
+          variant={'default'}
           onClick={downloadQRCode}
           >
             Download QR Code
           </Button>
+
+          {
+            allowEditing &&
+          
           <Dialog
           open={privacyModalOpen}
           >
@@ -228,6 +233,8 @@ export default function QRCodeComponent({ link, value }: QRCodeComponentProps) {
           </DialogFooter>
             </DialogContent>
           </Dialog>
+
+        }
           
        </div>
       </div>
