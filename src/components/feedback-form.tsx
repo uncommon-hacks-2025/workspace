@@ -5,18 +5,45 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export function FeedbackForm() {
-  const [feedback1, setFeedback1] = useState("");
-  const [feedback2, setFeedback2] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [feedback1, setFeedback1] = useState(""); // Feedback for the first question
+  const [feedback2, setFeedback2] = useState(""); // Feedback for the second question
+  const [submitted, setSubmitted] = useState(false); // Track if form is submitted
+  const [error, setError] = useState(""); // Store error messages
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!feedback1.trim() && !feedback2.trim()) return;
 
-    // Simulate form submission (replace with API call)
-    console.log("Feedback 1:", feedback1);
-    console.log("Feedback 2:", feedback2);
-    setSubmitted(true);
+    // If no feedback is provided, show error
+    if (!feedback1.trim() && !feedback2.trim()) {
+      setError("At least one feedback is required.");
+      return;
+    }
+
+    // Make a POST request to submit feedback
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          feedback1,
+          feedback2,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitted(true); // Show success message
+        setError(""); // Clear error if successful
+      } else {
+        setError(data.error || "Something went wrong.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while submitting your feedback.");
+    }
   };
 
   return (
@@ -25,8 +52,6 @@ export function FeedbackForm() {
         <p className="text-green-600 text-center">Thank you for your feedback!</p>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Input type="text" placeholder="Your Name (Optional)" className="border p-2 rounded-md" />
-
           <p>1) How effectively does Medify address the issue of miscommunication and inconsistency in your medical data? Please provide specific examples.</p>
           <Input
             type="text"
@@ -45,6 +70,7 @@ export function FeedbackForm() {
             className="border p-2 rounded-md"
           />
 
+          {error && <p className="text-red-600">{error}</p>} {/* Error Message */}
           <Button type="submit" className="bg-black text-white w-full py-2 rounded-md">
             Submit Feedback
           </Button>

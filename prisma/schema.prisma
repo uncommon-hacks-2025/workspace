@@ -96,7 +96,6 @@ model MedicalCondition {
 
 model Feedback {
   id      String  @id
-  userId  String
   answer1 String?
   answer2 String?
 }

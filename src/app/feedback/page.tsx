@@ -7,7 +7,7 @@ export default function FeedbackPage() {
       <div className="w-full max-w-lg bg-white shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold text-center mb-4">We Value Your Feedback</h1>
         <p className="text-center text-muted-foreground mb-6">
-          Let us know your thoughts to help us improve!
+          Let us know your thoughts to help us improve! The below questions are optional, and you will remain anonymous.
         </p>
         <FeedbackForm />
       </div>
