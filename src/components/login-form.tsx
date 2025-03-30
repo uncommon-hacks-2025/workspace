@@ -7,12 +7,14 @@ import Image from "next/image"
 import { signIn } from '@/lib/auth/client' 
 
 
+
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const handleLogin =  async () => {
      await signIn("auth0")
+     console.log(signIn("auth0"))
   }
 
   return (
