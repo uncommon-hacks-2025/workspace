@@ -8,6 +8,14 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { H2 } from "@/components/typography";
+import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
+import { GoogleGenAI } from "@google/genai";
+import * as readline from 'readline';
+
+const ai = new GoogleGenAI({ apiKey: `${process.env.GEMINI_API_KEY}` });
+
+const prisma = new PrismaClient();
 
 export default async function QrSlugPage({
     params,
@@ -26,9 +34,69 @@ export default async function QrSlugPage({
 
     const user = await getUser(gottenQrCode.userId);
 
+    const defaultQuestions = [
+        "What are the most important health concerns I should be aware of based on my health history?",
+        "Are there any specific lifestyle changes you would recommend to improve my health?",
+        "Given my health profile, are there any screenings or preventive measures I should consider?",
+        "How can I better manage my current health conditions?",
+        "What symptoms or changes should I watch for that might indicate a problem?",
+        "Are there any medications or treatments that you would recommend based on my health history?",
+    ];
+
+    let questionsForHealthcareProviders = defaultQuestions;
+    let healthScoreForPatient;
+
     if (!user) {
         // If the user does not exist, return a 404
         notFound();
+    } else {
+        const uId = user.id;
+    
+        if (uId) {
+          try {
+            const entries = await prisma.journalEntry.findMany({
+                where: { userId: uId },
+                orderBy: { entryDate: "desc" }
+            });
+
+            const generateQuestionsPrompt = "\nUsing the above user data as context for a patient profile, particularly focusing on the medication taken on a certain day, the corresponding symptoms experienced on a certain day, the sleep had on a certain day, and the other notes mentioned, generate a list of five specific, coherent, and productive questions taken from the perspective of the patient that the patient can use to ask their primary care physician at their next appointment. The end goal of these questions is to enable the patient to receive the best care possible by advocating for their health education and wellness awareness. SIMPLY SEPARATE YOUR QUESTIONS BY COMMAS"
+
+            const generateHealthScorePrompt = "\nUsing the above user data as context for a patient profile, particularly focusing on daily symptom, medication, and sleep data, generate a detailed and summarized report of the user's health. The user is to be seen as a patient who deserves the best care possible, and the summary should reflect a careful evaluation of the patient's data. For example, you may assess if their taken medication is the most suitable medication for their symptoms experienced on a certain data. You might also assess whether their experienced symptoms are urgent enough to warrant a doctor's visit. Overall, your report should come from a concerned and caring perspective seeking to help the patient receive the best care possible, and you might even recommend the patient to see a doctor based on your analysis."
+            
+            const entriesData = entries.map(entry => {
+                return `Entry Date: ${entry.entryDate.toISOString()}
+                Title: ${entry.entryTitle}
+                Medications Taken: ${entry.medicationsTaken || "None"}
+                Symptoms Had: ${entry.symptomsHad || "None"}
+                Sleep: ${entry.sleep ? entry.sleep.toString() + " hours" : "Not recorded"}
+                Other Notes: ${entry.otherNotes || "No additional notes"}
+                `;
+            }).join("\n");
+
+            const questionsPrompt = entriesData + generateQuestionsPrompt;
+
+            const healthScorePrompt = entriesData + generateHealthScorePrompt;
+
+            const questionsResponse = await ai.models.generateContent({
+                model: "gemini-2.0-flash",
+                contents: questionsPrompt,
+            });
+
+            const scoreResponse = await ai.models.generateContent({
+                model: "gemini-2.0-flash",
+                contents: healthScorePrompt,
+            });
+
+            questionsForHealthcareProviders = (questionsResponse.text ?? '').split(',') || defaultQuestions;
+
+
+            healthScoreForPatient = scoreResponse.text;
+
+          } catch (error) {
+              console.error("Error fetching journal entries:", error);
+              return NextResponse.json({ error: "Failed to fetch journal entries" }, { status: 500 });
+          }
+        }
     }
 
     const profile = await getProfileForUser(gottenQrCode.userId);
@@ -48,14 +116,7 @@ export default async function QrSlugPage({
     )
     : null; // Handle the case where dateOfBirth is not provided
 
-    const questionsForHealthcareProviders = [
-        "What are the most important health concerns I should be aware of based on my health history?",
-        "Are there any specific lifestyle changes you would recommend to improve my health?",
-        "Given my health profile, are there any screenings or preventive measures I should consider?",
-        "How can I better manage my current health conditions?",
-        "What symptoms or changes should I watch for that might indicate a problem?",
-        "Are there any medications or treatments that you would recommend based on my health history?",
-    ];
+    
 
     const medicalHistory = await getAllConditionsForProfile(profile.id);
 
@@ -199,7 +260,7 @@ export default async function QrSlugPage({
                 <TableRow>
                     <TableCell className="w-[150px]">Health Summary</TableCell>
                     <TableCell className="text-left">
-                        { "Not provided" }
+                        { healthScoreForPatient }
                     </TableCell>
                 </TableRow>
             </TableBody>
