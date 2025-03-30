@@ -23,7 +23,7 @@ const navButtons: NavButton[] = [
 ];
 
 export default function Navbar() {
-  const { status } = useSession();
+  const { status, data } = useSession();
 
   return (
     <nav className={"max-w-4xl flex mx-auto p-8 justify-between w-full"}>
@@ -49,11 +49,21 @@ export default function Navbar() {
           >
             Log out
           </Button>
-        ) : (
+        ) : status === "unauthenticated" ?(
           <Link href={"/login"}>
             <Button variant={"solid"}>Login</Button>
           </Link>
-        )}
+        ) : (
+            // spin 
+            <Button 
+              variant={"ghost"}
+              disabled
+                className={"cursor-not-allowed"}
+            >
+            Loading...
+            </Button>
+        )
+    }
       </div>
     </nav>
   );

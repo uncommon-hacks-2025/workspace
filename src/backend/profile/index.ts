@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db/prisma";
 import { MedicalHistory } from "@/types/history";
 import { Profile } from "@prisma/client";
 import { getUser, setUsersFullName } from "../user";
+import { createQrCode } from "../qr-code";
 
 export async function getProfileForUser(
   userId: string,
@@ -83,6 +84,17 @@ export async function createProfile(
       console.error("No medical conditions were created");
     } else {
       console.log(`Created ${medicalConditions.count} medical conditions`);
+    }
+
+    // create a QR code as well
+    const qrcode = createQrCode(userId)
+
+    if (!qrcode) {
+      // Handle the case where QR code creation failed
+      console.error("Failed to create QR code for user");
+      // You might want to handle this differently based on your application needs
+    } else {
+      console.log(`Created QR code for user with ID: ${userId}`);
     }
 
     // Return the created profile

@@ -1,12 +1,12 @@
 import { getProfileForUser } from "@/backend/profile";
 import { auth } from "@/lib/auth/providers";
 import { redirect } from "next/navigation";
-import { toPng } from "html-to-image";
 import QRCodeComponent from "@/components/code";
+import { createQrCode, getQrCode, updateQrCodePrivacy } from "@/backend/qr-code";
 
 export default async function QRCodePage() {
   const user = await auth();
-
+  
   if (user !== null) {
     // make sure that the user has a profile
     const userId = user.user?.id;
@@ -27,25 +27,27 @@ export default async function QRCodePage() {
     redirect("/login");
   }
 
-  const downloadQRCode = () => {
-    const qrCodeElement = document.getElementById("qr-code");
-    if (!qrCodeElement) return;
-
-    toPng(qrCodeElement)
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = "qr-code.png";
-        link.click();
-      })
-      .catch((error) => {
-        console.error("Failed to download QR code:", error);
-      });
-  };
+  let qrCode;
+  const userId = user.user?.id;
+  
+  if (userId === undefined) {
+    // If userId is undefined, redirect to login
+    // This should not happen if the auth flow is correct
+    return redirect("/login");
+  }
+  else {
+    // Fetch the QR code for the user
+    qrCode = await getQrCode(userId);
+    if (qrCode === null) {
+      // If no QR code exists for the user, create a new one
+      qrCode = await createQrCode(userId);
+    }
+  }
 
   return (
-    <QRCodeComponent 
-    value={"" + user.user?.id} // Pass the user ID or any other unique identifier as the value for the QR code
+    <QRCodeComponent
+    link={`${process.env.BASE_URL}/qr/${qrCode.uuid}`} // This should be the route to handle QR code scanning
+    value={qrCode} // Pass the user ID or any other unique identifier as the value for the QR code
     />
   );
 }
