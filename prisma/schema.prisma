@@ -75,7 +75,6 @@ model Authenticator {
 model Profile {
   id                String             @id @default(cuid())
   userId            String
-  age               Int
   gender            String
   height            Int
   weight            Int
@@ -91,6 +90,7 @@ model MedicalCondition {
   diagnosedDate DateTime
   status        String
   treatments    String?
+  notes         String? // Additional notes about the condition
   profile       Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
