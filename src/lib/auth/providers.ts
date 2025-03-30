@@ -8,6 +8,10 @@ export const handler = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
   secret: process.env.AUTH_SECRET,
+  pages: {
+    signIn: "/login",
+    error: "/login"
+  },
   providers: [
     Auth0Provider({
       clientId: process.env.AUTH0_CLIENT_ID!,
