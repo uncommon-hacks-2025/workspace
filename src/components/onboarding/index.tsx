@@ -6,6 +6,7 @@ import OnboardingStep1 from "./step1";
 import OnboardingStep2 from "./step2";
 import OnboardingStep3 from "./step3";
 import type { MedicalHistory } from "@/types/history";
+import { createProfile } from "@/backend/profile";
 
 const maxSteps = 4;
 
@@ -17,8 +18,23 @@ export default function OnboardingCard() {
     const [step, setStep] = useState<number>(1);
     const percentageStep = Math.ceil((step/(maxSteps - 1)) * 100);
 
-    const onComplete = () => {
-        alert("CREATING PROFILE")
+    const onComplete = async () => {
+        try {
+            const profile = await createProfile(fullName, dateOfBirth, medicalHistory)
+            if (!profile) {
+                // Handle the case where profile creation failed
+                alert("Profile already exists or user not found.");
+                return;
+            }
+        }
+        catch (error) {
+            // Handle the error appropriately
+            console.error("Failed to create profile:", error);
+            alert("Failed to create profile. Please try again later.");
+            // Optionally, you can provide more user-friendly feedback
+            // or redirect the user to an error page
+            return;
+        }
     }
 
     return (
