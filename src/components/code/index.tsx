@@ -230,13 +230,25 @@ export default function QRCodeComponent({ link, value, allowEditing = false }: Q
             }}
         
             type="submit">Save changes</Button>
+
+            
           </DialogFooter>
+          <div className={'bg-destructive/10 text-destructive text-sm p-2 rounded-md mt-4'}>
+          <p>
+          <strong>Note:</strong> To ensure safety, updating your privacy settings will make all previous QR codes invalid and generate a new QR code.
+          This means that anyone who has the old QR code will not be able to access your medical record anymore.
+          </p>
+        </div>
             </DialogContent>
           </Dialog>
 
         }
+
+        
           
        </div>
+
+       
       </div>
     </div>
     </div>

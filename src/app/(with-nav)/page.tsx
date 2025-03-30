@@ -1,6 +1,7 @@
 import { H1, H2, P } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -16,12 +17,17 @@ export default function Home() {
           </P>
           <div className={"flex flex-col gap-2"}>
             <H2>Crack your Personal Medical Record</H2>
-            <P>Empowering you to take control of your health journey.</P>
+            <P>We understand that managing your health information can be overwhelming. That's why we&apos;ve created Mediary, a simple and secure way to manage and share your medical history.</P>
           </div>
 
+          <Link
+          href={"/login"}
+          >
           <Button className={"mt-4 w-full md:w-fit"} variant={"solid"}>
             Get started
           </Button>
+          </Link>
+          
         </div>
         <div className={"relative mx-auto"}>
           <Image
