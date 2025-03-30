@@ -11,7 +11,6 @@ import { H2 } from "@/components/typography";
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
-import * as readline from 'readline';
 
 const ai = new GoogleGenAI({ apiKey: `${process.env.GEMINI_API_KEY}` });
 
@@ -46,12 +45,15 @@ export default async function QrSlugPage({
     let questionsForHealthcareProviders = defaultQuestions;
     let healthScoreForPatient;
 
+    let questionsResponse;
+    let scoreResponse;
+
     if (!user) {
         // If the user does not exist, return a 404
         notFound();
     } else {
         const uId = user.id;
-    
+        
         if (uId) {
           try {
             const entries = await prisma.journalEntry.findMany({
@@ -59,11 +61,10 @@ export default async function QrSlugPage({
                 orderBy: { entryDate: "desc" }
             });
 
-            const generateQuestionsPrompt = "\nUsing the above user data as context for a patient profile, particularly focusing on the medication taken on a certain day, the corresponding symptoms experienced on a certain day, the sleep had on a certain day, and the other notes mentioned, generate a list of five specific, coherent, and productive questions taken from the perspective of the patient that the patient can use to ask their primary care physician at their next appointment. The end goal of these questions is to enable the patient to receive the best care possible by advocating for their health education and wellness awareness. SIMPLY SEPARATE YOUR QUESTIONS BY COMMAS"
-
-            const generateHealthScorePrompt = "\nUsing the above user data as context for a patient profile, particularly focusing on daily symptom, medication, and sleep data, generate a detailed and summarized report of the user's health. The user is to be seen as a patient who deserves the best care possible, and the summary should reflect a careful evaluation of the patient's data. For example, you may assess if their taken medication is the most suitable medication for their symptoms experienced on a certain data. You might also assess whether their experienced symptoms are urgent enough to warrant a doctor's visit. Overall, your report should come from a concerned and caring perspective seeking to help the patient receive the best care possible, and you might even recommend the patient to see a doctor based on your analysis."
+            const generateQuestionsPrompt = "\nUsing the above user data as context for a patient profile, particularly focusing on the medication taken on a certain day, the corresponding symptoms experienced on a certain day, the sleep had on a certain day, and the other notes mentioned, generate a list of five specific, coherent, and productive questions taken from the perspective of the patient that the patient can use to ask their primary care physician at their next appointment. The end goal of these questions is to enable the patient to receive the best care possible by advocating for their health education and wellness awareness. It should be straight to the point, do not say \"Okay, ...\" SIMPLY SEPARATE YOUR QUESTIONS BY QUESTION  MARKS"
+            const generateHealthScorePrompt = "\nUsing the above user data as context for a patient profile, particularly focusing on daily symptom, medication, and sleep data, generate a short and concise paragraph summarizing the user's health. The summary should highlight key observations, potential concerns, and any recommendations for the patient to consider. Ensure the tone is caring and supportive, aiming to help the patient receive the best care possible."
             
-            const entriesData = entries.map(entry => {
+            let entriesData = entries.map(entry => {
                 return `Entry Date: ${entry.entryDate.toISOString()}
                 Title: ${entry.entryTitle}
                 Medications Taken: ${entry.medicationsTaken || "None"}
@@ -71,31 +72,56 @@ export default async function QrSlugPage({
                 Sleep: ${entry.sleep ? entry.sleep.toString() + " hours" : "Not recorded"}
                 Other Notes: ${entry.otherNotes || "No additional notes"}
                 `;
-            }).join("\n");
+            }).join("\n")
+
+            if (entries.length === 0) {
+                // If there are no entries, return a default message
+                entriesData = "No journal entries found for this user. Please ensure you have logged your health information.";
+            }
 
             const questionsPrompt = entriesData + generateQuestionsPrompt;
-
             const healthScorePrompt = entriesData + generateHealthScorePrompt;
 
-            const questionsResponse = await ai.models.generateContent({
-                model: "gemini-2.0-flash",
-                contents: questionsPrompt,
-            });
+            if (gottenQrCode.shareHealthLogs === true) {
+                questionsResponse = await ai.models.generateContent({
+                    model: "gemini-2.0-flash",
+                    contents: [
+                        {
+                            role: "You are a medical AI assistant. Your task is to generate questions for healthcare providers based on the provided health information. The goal is to help patients advocate for their health and wellness. You will ask questions that are specific, coherent, and productive, focusing on the patient's health history and current status. Separate your questions by question marks. Ensure that the questions are relevant to the patient's health information and can facilitate meaningful discussions with healthcare providers. These questions should also think about medical error and questions that people don't often think about. The whole idea is patient safety and making sure patients learn more about the healthcare system because they don't learn it in school.\n\n" +
+                            // This is the prompt for generating questions
+                            // The context provided will be the journal entries
+                            entriesData + "\n\n",
+                            text: questionsPrompt,
+                            
+                        }
+                    ]
+                    
+                });
+    
+                scoreResponse = await ai.models.generateContent({
+                    model: "gemini-2.0-flash",
+                    contents: [
+                        {
+                            role: "You are a medical AI assistant. Your task is to generate a health summary for the patient based on the provided health information. The goal is to provide a concise and supportive summary that highlights key observations and potential concerns. Use the following information to generate the health summary:\n\n \n" +
+                            // This is the prompt for generating health summary
+                            // The context provided will be the journal entries
+                            entriesData + "\n\n",
+                            text: healthScorePrompt,
+                        }
+                    ]
+                });
+            }
 
-            const scoreResponse = await ai.models.generateContent({
-                model: "gemini-2.0-flash",
-                contents: healthScorePrompt,
-            });
-
-            questionsForHealthcareProviders = (questionsResponse.text ?? '').split(',') || defaultQuestions;
-
-
-            healthScoreForPatient = scoreResponse.text;
+            questionsForHealthcareProviders = (questionsResponse?.text ?? '').split('?').filter((val) => val.trim() !== "").map((val) => `${val}?`) || defaultQuestions;
+            
+            healthScoreForPatient = scoreResponse?.text;
 
           } catch (error) {
               console.error("Error fetching journal entries:", error);
-              return NextResponse.json({ error: "Failed to fetch journal entries" }, { status: 500 });
           }
+        }
+        else {
+            console.log("TEST")
         }
     }
 
@@ -265,8 +291,8 @@ export default async function QrSlugPage({
             <TableBody>
                 <TableRow>
                     <TableCell className="w-[150px]">Health Summary</TableCell>
-                    <TableCell className="text-left">
-                        { healthScoreForPatient }
+                    <TableCell className="text-left break-words text-wrap">
+                        { gottenQrCode.shareHealthLogs === true ? healthScoreForPatient : "Not provided" }
                     </TableCell>
                 </TableRow>
             </TableBody>

@@ -19,7 +19,7 @@ export default function OnboardingCard() {
   const [medicalHistory, setMedicalHistory] = useState<MedicalHistory[]>([]);
 
   const [step, setStep] = useState<number>(1);
-  const percentageStep = Math.ceil((step / (maxSteps - 1)) * 100);
+  const percentageStep = Math.ceil(((step - 1) / (maxSteps - 1)) * 100);
 
   const onComplete = async () => {
     try {

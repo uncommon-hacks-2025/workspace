@@ -1,6 +1,5 @@
 import { Label } from "../ui/label";
 
-import "react-datepicker/dist/react-datepicker.css";
 import { Input } from "../ui/input";
 
 type OnboardingProps = {

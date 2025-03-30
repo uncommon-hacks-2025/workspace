@@ -8,7 +8,7 @@ export default function Home() {
     <div className="flex flex-col justify-center min-h-screen gap-16 font-[family-name:var(--font-geist-sans)]">
       <div
         className={
-          "flex flex-col md:flex-row gap-4 h-fit max-w-4xl mx-auto items-center px-8"
+          "md:min-h-sreen flex flex-col md:flex-row gap-4 h-fit max-w-4xl mx-auto items-center px-8"
         }
       >
         <div className={"flex flex-col gap-2 h-fit"}>
