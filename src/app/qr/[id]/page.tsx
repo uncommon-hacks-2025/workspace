@@ -128,7 +128,7 @@ export default async function QrSlugPage({
         </H2>
         
         <ul className="list-disc list-inside max-w-xl w-full mx-auto mt-4 text-left space-y-4">
-            {medicalHistory.length > 0 ? (
+            {(medicalHistory.length > 0 && gottenQrCode.shareMedicalHistory === true) ? (
                 medicalHistory.map((condition, index) => (
                     <li key={index} className="text-gray-700 bg-neutral-100 p-2 rounded-md mb-2 shadow-sm">
                         <strong>{condition.condition}</strong>
@@ -151,11 +151,17 @@ export default async function QrSlugPage({
                     </li>
                 ))
             ) : (
+                gottenQrCode.shareMedicalHistory === true ? (
                 <li className="text-gray-500 bg-neutral-100 p-4 rounded-md mb-2 shadow-sm">
                     No medical conditions reported. 
                     <br />
                     (This means the patient has not provided any medical history or conditions)
                 </li>
+                ) : (
+                    <li className="text-gray-500 bg-neutral-100 p-4 rounded-md mb-2 shadow-sm">
+                    Medical history is private.
+                </li>
+                )
             )}
         </ul>
 
