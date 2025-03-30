@@ -18,8 +18,9 @@ model User {
   updatedAt     DateTime        @updatedAt
   accounts      Account[]
   Authenticator Authenticator[]
-  JournalEntry  JournalEntry?
+  JournalEntry  JournalEntry[]
   Profile       Profile[]
+  QRCode        QRCode?
   sessions      Session[]
 }
 
@@ -109,5 +110,21 @@ model JournalEntry {
   symptomsHad      String?
   sleep            Decimal? @db.Decimal(3, 1)
   otherNotes       String?
-  User             User     @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userId")
+  userId           String
+  User             User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userId")
+}
+
+model QRCode {
+  id                  String   @id
+  uuid                String
+  userId              String   @unique
+  qrCodeData          String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime
+  shareName           Boolean  @default(false)
+  shareDateOfBirth    Boolean  @default(false)
+  shareMedicalHistory Boolean  @default(false)
+  shareAllergies      Boolean  @default(false)
+  shareHealthLogs     Boolean  @default(false)
+  User                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
