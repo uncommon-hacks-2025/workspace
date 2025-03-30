@@ -101,3 +101,22 @@ export async function createProfile(
     return profile;
   }
 }
+
+export async function getAllConditionsForProfile(
+  profileId: string,
+) {
+  const conditions = await prisma.medicalCondition.findMany({
+    where: {
+      profileId: {
+        equals: profileId,
+      },
+    },
+    orderBy: [
+      {
+        diagnosedDate: "desc", // Order by diagnosed date, most recent first
+      },
+    ],
+  });
+
+  return conditions;
+}
