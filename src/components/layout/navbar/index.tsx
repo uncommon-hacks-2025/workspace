@@ -25,14 +25,14 @@ export default async function Navbar() {
   const loggedIn = user !== null;
 
   return (
-    <nav className={"flex w-4 justify-around"}>
+    <nav className={"flex mx-auto p-8 justify-around w-full"}>
       <Image src={"/logos/logo.svg"} alt={"Logo"} width={80} height={80} />
 
       <div className={"flex items-center"}>
         {navButtons.map((val, index) => {
           return (
             <Link key={index} href={val.href}>
-              <Button className={"bg-transparent hover:!bg-black"}>
+              <Button variant={'ghost'} >
                 {val.title}
               </Button>
             </Link>

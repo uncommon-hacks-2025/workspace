@@ -28,6 +28,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/components/layout/navbar/index.tsx"
-  ],
+, "tailwind.config.js"  ],
   "exclude": ["node_modules"]
 }
