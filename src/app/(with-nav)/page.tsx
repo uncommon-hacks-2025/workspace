@@ -8,7 +8,7 @@ export default function Home() {
     <div className="flex flex-col justify-center min-h-screen gap-16 font-[family-name:var(--font-geist-sans)]">
       <div
         className={
-          "md:min-h-sreen flex flex-col md:flex-row gap-4 h-fit max-w-4xl mx-auto items-center px-8"
+          "md:min-h-[calc(100vh-280px)] flex flex-col md:flex-row gap-4 h-fit max-w-4xl mx-auto items-center px-8"
         }
       >
         <div className={"flex flex-col gap-2 h-fit"}>
@@ -17,7 +17,7 @@ export default function Home() {
           </P>
           <div className={"flex flex-col gap-2"}>
             <H2>Crack your Personal Medical Record</H2>
-            <P>We understand that managing your health information can be overwhelming. That's why we&apos;ve created Mediary, a simple and secure way to manage and share your medical history.</P>
+            <P>Your health record shouldn’t restart when you change clinics. That's why we created Mediary, a simple and secure way to manage and share your medical history.</P>
           </div>
 
           <Link
