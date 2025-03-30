@@ -24,14 +24,7 @@ export default function OnboardingPage() {
                 <OnboardingCard />
                 
 
-                <div
-                className={'bg-neutral-100 rounded-full h-8 w-full clip'}
-                >
-                    <hr
-                    className={'border-t-8 w-[25%] bg-black rounded-full'}
-                    />
-                </div>
-              
+             
             </div>
             
         </main>

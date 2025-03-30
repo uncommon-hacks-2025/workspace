@@ -1,7 +1,9 @@
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-export default function OnboardingStep1() {
+import "react-datepicker/dist/react-datepicker.css";
+import { Input } from "../ui/input";
+
+export default function OnboardingStep2() {
     return (
         <div
             className={'flex flex-col gap-1'}
@@ -9,9 +11,13 @@ export default function OnboardingStep1() {
             <Label
             htmlFor="name"
             >
-                First thing&apos;s first, what&apos;s your full name?
+                What is your date of birth?
             </Label>
-            <Input name="name" />
+
+            <Input
+            type="date"
+            />
+            
             </div>
     )
 }

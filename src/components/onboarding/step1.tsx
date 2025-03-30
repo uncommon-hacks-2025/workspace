@@ -11,7 +11,7 @@ export default function OnboardingStep1() {
             >
                 First thing&apos;s first, what&apos;s your full name?
             </Label>
-            <Input name="name" />
+            <Input name="name" placeholder="Full name" />
             </div>
     )
 }

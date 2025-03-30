@@ -3,9 +3,21 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import OnboardingStep1 from "./step1";
+import OnboardingStep2 from "./step2";
+import OnboardingStep3 from "./step3";
+
+const maxSteps = 4;
 
 export default function OnboardingCard() {
+    const [fullName, setFullname] = useState<string>("");
+    const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
+
     const [step, setStep] = useState<number>(1);
+    const percentageStep = Math.ceil((step/(maxSteps - 1)) * 100);
+
+    const onComplete = () => {
+        alert("CREATING PROFILE")
+    }
 
     return (
         <div
@@ -15,25 +27,57 @@ export default function OnboardingCard() {
             {
                 step === 1 ? (
                     <OnboardingStep1 />
-                ) : null
+                ) : (
+                    step === 2 ? (
+                        <OnboardingStep2 />
+                    ) : <OnboardingStep3 />
+                )
             }
            
-            <Button
+
+
+{
+    step < maxSteps - 1 ?
+    (
+        
+             <Button
             onClick={() => setStep(step + 1)}
             variant={'solid'}
             >
                 Next
             </Button>
-            {
-                step > 1 ? (
+
+    )
+    : (
+        <Button
+        onClick={onComplete}
+        variant={'solid'}
+        >
+            Complete
+        </Button>
+    )
+    
+    }
+            
+               { step > 1 ? (
                     <Button
                     onClick={() => setStep(step - 1)}
                     variant={'default'}
                     >
                         Go back
                     </Button>
-                ) : null
-            }
+                ) : null}
+           <div
+                className={'bg-neutral-100 rounded-full h-2 w-full '}
+                >
+                    <hr
+                    style={{
+                        width: `${percentageStep}%`,
+                        transition: 'width 0.15s ease-in-out', // Smooth transition for width changes
+                    }}
+                    className={`h-full bg-black rounded-full`}
+                    />
+                </div>
         </div>
     )
 }
