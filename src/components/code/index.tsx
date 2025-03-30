@@ -4,13 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toPng } from "html-to-image";
 import QRCode from "react-qr-code";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
+import { H2 } from "../typography";
+import { useState } from "react";
 
 type QRCodeComponentProps = {
     value: string; // The value to encode in the QR code
 };
 
 export default function QRCodeComponent({ value }: QRCodeComponentProps) {
-  
+  const [privacyModalOpen, setPrivacyModalOpen] =
+    useState(false); // State to control the privacy modal visibility
+
   const downloadQRCode = () => {
     const qrCodeElement = document.getElementById("qr-code");
     if (!qrCodeElement) return;
@@ -58,22 +64,79 @@ export default function QRCodeComponent({ value }: QRCodeComponentProps) {
           >
             Download QR Code
           </Button>
-          <Dialog>
+          <Dialog
+          open={privacyModalOpen}
+          >
             <DialogTrigger asChild>
-              <Button>
+              <Button
+              onClick={() => {
+                // Open the privacy modal
+                setPrivacyModalOpen(true);
+              }}
+              >
               Change Privacy Settings
             </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-xl">
             <DialogHeader>
-              <DialogTitle>Edit profile</DialogTitle>
+              <DialogTitle>Update QR Code Privacy</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
+                  You can update the privacy settings for your QR code. 
+                  This will determine who can access your medical record when they scan the QR code.
+
+                  <br />
+                <br />
+                  Note: Changing this setting will generate a new QR code.
               </DialogDescription>
             </DialogHeader>
 
+            <div className="mt-4">
+                <H2 className="text-sm text-muted-foreground">
+                    Please select your desired privacy setting for the QR code:
+                </H2>
+               <div className="mt-2 flex flex-row items-center gap-2">
+                <Switch name="name" />
+                    <Label htmlFor="name" className="flex items-center gap-2">
+                        View Name
+                    </Label>
+                </div>
+
+                <div className="mt-2 flex flex-row items-center gap-2">
+                <Switch name="DOB" />
+                    <Label htmlFor="DOB" className="flex items-center gap-2">
+                        View Date of Birth
+                    </Label>
+                </div>
+
+                <div className="mt-2 flex flex-row items-center gap-2">
+                <Switch name="medicalHistory" />
+                    <Label htmlFor="medicalHistory" className="flex items-center gap-2">
+                        View Medical History
+                    </Label>
+                </div>
+
+                <div className="mt-2 flex flex-row items-center gap-2">
+                <Switch name="allergies" />
+                    <Label htmlFor="allergies" className="flex items-center gap-2">
+                        View Allergies
+                    </Label>
+                </div>
+
+                <div className="mt-2 flex flex-row items-center gap-2">
+                <Switch name="healthLogs" />
+                    <Label htmlFor="healthLogs" className="flex items-center gap-2">
+                        View Health Logs (e.g., journal entries, symptoms)
+                    </Label>
+                </div>
+            </div>
+
             <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit"
+            onClick={() => {
+                setPrivacyModalOpen(false);
+            }}
+            >Cancel</Button>
+            <Button variant={'solid'} type="submit">Save changes</Button>
           </DialogFooter>
             </DialogContent>
           </Dialog>
