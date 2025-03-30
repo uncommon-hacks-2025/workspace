@@ -52,7 +52,7 @@ export function FeedbackForm() {
         <p className="text-green-600 text-center">Thank you for your feedback!</p>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <p>1) How effectively does Medify address the issue of miscommunication and inconsistency in your medical data? Please provide specific examples.</p>
+          <p>1) How effectively does Mediary address the issue of miscommunication and inconsistency in your medical data? Please provide specific examples.</p>
           <Input
             type="text"
             placeholder="Write your feedback..."
@@ -61,7 +61,7 @@ export function FeedbackForm() {
             className="border p-2 rounded-md"
           />
 
-          <p>2) If you could add one feature to Medify, what would it be? Please give a detailed description.</p>
+          <p>2) If you could add one feature to Mediary, what would it be? Please give a detailed description.</p>
           <Input
             type="text"
             placeholder="Write your feedback..."
