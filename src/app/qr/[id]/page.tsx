@@ -61,7 +61,7 @@ export default async function QrSlugPage({
 
     return (
       
-        <div className="text-center mb-4 flex items-center flex-col gap-2 pt-16 max-w-xl mx-auto sm-px-8 px-0">
+        <div className="text-center mb-4 flex items-center flex-col gap-2 pt-16 max-w-xl mx-auto px-12 md:px-0">
           <Link
           href={'/'}
           >
