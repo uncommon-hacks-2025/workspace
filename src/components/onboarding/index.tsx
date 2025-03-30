@@ -7,10 +7,13 @@ import OnboardingStep2 from "./step2";
 import OnboardingStep3 from "./step3";
 import type { MedicalHistory } from "@/types/history";
 import { createProfile } from "@/backend/profile";
+import { useRouter } from "next/navigation";
 
 const maxSteps = 4;
 
 export default function OnboardingCard() {
+    const router = useRouter();
+
     const [fullName, setFullname] = useState<string>("");
     const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
     const [medicalHistory, setMedicalHistory] = useState<MedicalHistory[]>([]);
@@ -25,6 +28,9 @@ export default function OnboardingCard() {
                 // Handle the case where profile creation failed
                 alert("Profile already exists or user not found.");
                 return;
+            }
+            else {
+                router.push("/") // go back to the home page
             }
         }
         catch (error) {

@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth/providers'
 import { prisma } from '@/lib/db/prisma'
 import { MedicalHistory } from '@/types/history'
 import { Profile } from '@prisma/client'
-import { getUser } from '../user'
+import { getUser, setUsersFullName } from '../user'
 
 
 export async function getProfileForUser(userId: string): Promise<Profile | null> {
@@ -41,6 +41,9 @@ export async function createProfile(fullName: string, dateOfBirth: Date, history
             // User not found
             throw new Error("User not found")
         }
+
+        // change the user's name
+        setUsersFullName(userId, fullName);
         
         // get the current u
         const profile = await prisma.profile.create({

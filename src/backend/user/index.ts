@@ -10,3 +10,15 @@ export async function getUser(userId: string): Promise<User | null> {
         }
     })
 }
+
+export async function setUsersFullName(userId: string, name: string): Promise<User | null> {
+    return prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: {
+            name
+        }
+    })
+}
+
