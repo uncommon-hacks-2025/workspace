@@ -49,10 +49,16 @@ export function FeedbackForm() {
   return (
     <div className="flex flex-col gap-4">
       {submitted ? (
-        <p className="text-green-600 text-center">Thank you for your feedback!</p>
+        <p className="text-green-600 text-center">
+          Thank you for your feedback!
+        </p>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <p>1) How effectively does Mediary address the issue of miscommunication and inconsistency in your medical data? Please provide specific examples.</p>
+          <p>
+            1) How effectively does Mediary address the issue of
+            miscommunication and inconsistency in your medical data? Please
+            provide specific examples.
+          </p>
           <Input
             type="text"
             placeholder="Write your feedback..."
@@ -60,8 +66,10 @@ export function FeedbackForm() {
             onChange={(e) => setFeedback1(e.target.value)}
             className="border p-2 rounded-md"
           />
-
-          <p>2) If you could add one feature to Mediary, what would it be? Please give a detailed description.</p>
+          <p>
+            2) If you could add one feature to Mediary, what would it be? Please
+            give a detailed description.
+          </p>
           <Input
             type="text"
             placeholder="Write your feedback..."
@@ -69,9 +77,12 @@ export function FeedbackForm() {
             onChange={(e) => setFeedback2(e.target.value)}
             className="border p-2 rounded-md"
           />
-
-          {error && <p className="text-red-600">{error}</p>} {/* Error Message */}
-          <Button type="submit" className="bg-black text-white w-full py-2 rounded-md">
+          {error && <p className="text-red-600">{error}</p>}{" "}
+          {/* Error Message */}
+          <Button
+            type="submit"
+            className="bg-black text-white w-full py-2 rounded-md"
+          >
             Submit Feedback
           </Button>
         </form>
