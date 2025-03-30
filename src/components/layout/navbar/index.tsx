@@ -1,7 +1,10 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { auth } from "@/lib/auth/providers";
+import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type NavButton = {
   title: string;
@@ -19,10 +22,10 @@ const navButtons: NavButton[] = [
   },
 ];
 
-export default async function Navbar() {
-  const user = await auth();
+export default function Navbar() {
+    const router = useRouter();
+  const { status } = useSession();
 
-  const loggedIn = user !== null;
 
   return (
     <nav className={"flex mx-auto p-8 justify-around w-full"}>
@@ -39,12 +42,21 @@ export default async function Navbar() {
           );
         })}
 
-        {loggedIn ? (
-          <Button variant={"solid"}>Log out</Button>
+        {status === "authenticated" ? (
+          <Button variant={"solid"}
+          onClick={() => signOut({
+            redirectTo: "/login"
+          })}
+          >Log out</Button>
         ) : (
-          <Button
-          variant={'solid'}
-          >Login</Button>
+            <Link
+            href={'/login'}
+            >
+                <Button
+            variant={'solid'}
+            >Login</Button>
+            </Link>
+         
         )}
       </div>
     </nav>
