@@ -14,7 +14,7 @@ export function LoginForm({
       className={'flex flex-col gap-4 items-center justify-center'}
       >
          <Image
-        src={'/logos/auth0.svg'}
+        src={'/logos/logo.svg'}
         alt={'Auth0 Logo'}
         width={56}
         height={56}
