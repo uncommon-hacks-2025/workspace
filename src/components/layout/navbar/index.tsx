@@ -27,7 +27,9 @@ export default function Navbar() {
 
   return (
     <nav className={"max-w-4xl flex mx-auto p-8 justify-between w-full"}>
-      <Image src={"/logos/logo.svg"} alt={"Logo"} width={80} height={80} />
+      <Link href={"/"} className={"flex items-center gap-2"}>
+        <Image src={"/logos/logo.svg"} alt={"Logo"} width={80} height={80} />
+      </Link>
 
       <div className={"flex items-center gap-2"}>
         {navButtons.map((val, index) => {
