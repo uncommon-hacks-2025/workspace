@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+// import { User } from "@prisma/client";
+import { prisma } from "@/lib/db/prisma";
+
 type Entry = {
     id: string;
     entryTitle: string;
@@ -10,6 +13,7 @@ type Entry = {
     symptomsHad?: string;
     sleep?: number;
     otherNotes?: string;
+    userId?: string;
 };
 
 export default function JournalEntries() {
@@ -33,9 +37,16 @@ export default function JournalEntries() {
     // Handle adding a new entry
     const handleAddEntry = async () => {
         if (!entryTitle || !entryDate) return alert("Title and Date are required.");
-
+    
         setLoading(true);
         try {
+            // Get current user information (this is an example, modify as needed)
+            const currentUser = { id: "user-id" }; // Replace this with your actual current user fetching logic.
+    
+            // Validate and format sleep value to one decimal place
+            const parsedSleep = sleep ? parseFloat(sleep) : 0.0;
+            const sleepValue = isNaN(parsedSleep) || parsedSleep < 0 ? null : parsedSleep.toFixed(1);
+    
             const res = await fetch("/api/journal-entries", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -44,13 +55,14 @@ export default function JournalEntries() {
                     entryDate,
                     medicationsTaken: medicationsTaken || null,
                     symptomsHad: symptomsHad || null,
-                    sleep: sleep ? parseFloat(sleep) : null,
-                    otherNotes: otherNotes || null
+                    sleep: sleepValue, // Ensure sleep is correctly formatted
+                    otherNotes: otherNotes || null,
+                    userId: currentUser.id // Include the current user's ID here
                 })
             });
-
+    
             if (!res.ok) throw new Error("Failed to add entry");
-
+    
             const newEntry = await res.json();
             setEntries([newEntry, ...entries]); // Update UI
             setEntryTitle("");
@@ -64,6 +76,7 @@ export default function JournalEntries() {
         }
         setLoading(false);
     };
+    
 
     return (
         <div className="max-w-lg mx-auto p-4 bg-white shadow-md rounded-md">

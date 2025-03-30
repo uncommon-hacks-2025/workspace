@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { auth } from "@/lib/auth/providers";
+import { v4 as uuidv4 } from "uuid"; // Import UUID package to generate random IDs
 
 const prisma = new PrismaClient();
 
@@ -11,12 +12,12 @@ export async function GET(req: Request) {
   if (!user) {
 
   } else {
-    const userId = user.user?.id;
+    const uId = user.user?.id;
 
-    if (userId) {
+    if (uId) {
       try {
         const entries = await prisma.journalEntry.findMany({
-            where: { id: userId },
+            where: { userId: uId },
             orderBy: { entryDate: "desc" }
         });
         return NextResponse.json(entries);
@@ -31,24 +32,38 @@ export async function GET(req: Request) {
 
 // Add a new journal entry
 export async function POST(req: Request) {
-    const { entryTitle, entryDate, medicationsTaken, symptomsHad, sleep, otherNotes } = await req.json();
-    const userId = "user123"; // Replace with actual user session ID
+  try {
+    const entryId = uuidv4();
 
-    try {
+    const { entryTitle, entryDate, medicationsTaken, symptomsHad, sleep, otherNotes } = await req.json();
+
+    const user = await auth();
+    
+    if (!user) {
+
+    } else {
+      const uId = user.user?.id;
+  
+      if (uId) {
         const newEntry = await prisma.journalEntry.create({
-            data: {
-                id: userId,
-                entryTitle,
-                entryDate: new Date(entryDate), // Ensure correct date format
-                medicationsTaken,
-                symptomsHad,
-                sleep,
-                otherNotes
-            }
+          data: {
+            id: entryId,
+            entryTitle: entryTitle,
+            entryDate: new Date(entryDate), // Ensure correct date format
+            medicationsTaken: medicationsTaken || null,
+            symptomsHad: symptomsHad || null,
+            sleep: sleep || null,
+            otherNotes: otherNotes || null,
+            userId: uId,
+          },
         });
+
         return NextResponse.json(newEntry);
-    } catch (error) {
-        console.error("Error adding journal entry:", error);
-        return NextResponse.json({ error: "Failed to add entry" }, { status: 500 });
+        
+      }
     }
+  } catch (error) {
+    console.error("Error adding journal entry:", error);
+    return NextResponse.json({ error: "Failed to add entry" }, { status: 500 });
+  }
 }
