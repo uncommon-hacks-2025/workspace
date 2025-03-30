@@ -10,11 +10,11 @@ type NavButton = {
 
 const navButtons: NavButton[] = [
   {
-    title: "features",
+    title: "Features",
     href: "/",
   },
   {
-    title: "check in",
+    title: "Check in",
     href: "/",
   },
 ];
@@ -28,7 +28,7 @@ export default async function Navbar() {
     <nav className={"flex mx-auto p-8 justify-around w-full"}>
       <Image src={"/logos/logo.svg"} alt={"Logo"} width={80} height={80} />
 
-      <div className={"flex items-center"}>
+      <div className={"flex items-center gap-2"}>
         {navButtons.map((val, index) => {
           return (
             <Link key={index} href={val.href}>
@@ -42,7 +42,9 @@ export default async function Navbar() {
         {loggedIn ? (
           <Button variant={"solid"}>Log out</Button>
         ) : (
-          <Button>Login</Button>
+          <Button
+          variant={'solid'}
+          >Login</Button>
         )}
       </div>
     </nav>
