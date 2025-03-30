@@ -21,6 +21,7 @@ model User {
   JournalEntry  JournalEntry?
   Profile       Profile[]
   sessions      Session[]
+  QRCode        QRCode?
 }
 
 model Account {
@@ -99,6 +100,25 @@ model Feedback {
   id      String  @id
   answer1 String?
   answer2 String?
+}
+
+model QRCode {
+  id         String   @id @default(cuid())
+  uuid      String   @default(cuid()) // after every change, a new UUID will be generated to track changes
+  // This UUID will be used for URLs to access the QR code data. It should be unique for each QR code entry.
+  userId     String
+  qrCodeData String // The actual QR code data
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // privacy here:
+  shareName  Boolean @default(false) // Whether to share name in QR code
+  shareDateOfBirth Boolean @default(false) // Whether to share date of birth in QR code
+  shareMedicalHistory Boolean @default(false) // Whether to share medical history in QR code
+  shareAllergies Boolean @default(false) // Whether to share allergies in QR code
+  shareHealthLogs Boolean @default(false) // Whether to share health logs in QR code
+  @@unique([userId]) // Ensure each user has only one QR code entry
 }
 
 model JournalEntry {
