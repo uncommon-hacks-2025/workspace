@@ -1,4 +1,4 @@
-import { getProfileForUser } from "@/backend/profile";
+import { getAllConditionsForProfile, getProfileForUser } from "@/backend/profile";
 import { getQrCodeWithUuid } from "@/backend/qr-code";
 import { getUser } from "@/backend/user";
 import QRCodeComponent from "@/components/code";
@@ -56,6 +56,8 @@ export default async function QrSlugPage({
         "What symptoms or changes should I watch for that might indicate a problem?",
         "Are there any medications or treatments that you would recommend based on my health history?",
     ];
+
+    const medicalHistory = await getAllConditionsForProfile(profile.id);
 
     return (
       
@@ -125,48 +127,37 @@ export default async function QrSlugPage({
             Health History
         </H2>
         
-        <Table
-        className={'max-w-xl w-full mx-auto mt-4 border border-gray-300 rounded-md shadow-md'}
-        >
-            <TableCaption>
-                This table contains the health information associated with the QR code scanned. 
-                Please ensure that you have permission to access this information.
-                <br />
-                <br />
-                Note: This information is confidential and should be handled with care.
-            </TableCaption>
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-[150px]">Field</TableHead>
-                    <TableHead className="text-left">Value</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                <TableRow>
-                    <TableCell className="w-[150px]">Full Name</TableCell>
-                    <TableCell className="text-left">
-                        {gottenQrCode.shareName ?
-                        `${user.name}`
-                        :
-                        // If the user has not provided permission to share their full name
-                        "Not provided"
-                        }
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                <TableCell className="w-[150px]">Date of Birth</TableCell>
-                    <TableCell className="text-left">
-                        {gottenQrCode.shareDateOfBirth ?
-                        `${profile.dateOfBirth ? `${new Date(profile.dateOfBirth).toLocaleDateString()} (${age ?? 0} years old)` : "Not provided"}`
-                        :
-                        // If the user has not provided permission to share their full name
-                        "Not provided"
-                        }
-                    </TableCell>
-                </TableRow>
-               
-            </TableBody>
-        </Table>
+        <ul className="list-disc list-inside max-w-xl w-full mx-auto mt-4 text-left space-y-4">
+            {medicalHistory.length > 0 ? (
+                medicalHistory.map((condition, index) => (
+                    <li key={index} className="text-gray-700 bg-neutral-100 p-2 rounded-md mb-2 shadow-sm">
+                        <strong>{condition.condition}</strong>
+                        {condition.notes && (
+                            <span className="text-sm text-gray-500">
+                                {" - Notes: "}{condition.notes}
+                            </span>
+                        )}
+                        {condition.diagnosedDate && (
+                            <span className="text-sm text-gray-500">
+                                {" - Diagnosed on: "}{new Date(condition.diagnosedDate).toLocaleDateString()}
+                            </span>
+                        )}
+                        {condition.status && (
+                            <span className="text-sm text-gray-500">
+                                {" - Status: "}{condition.status}
+                            </span>
+                        )}
+                        {/* You can add more details here based on your requirements */}
+                    </li>
+                ))
+            ) : (
+                <li className="text-gray-500 bg-neutral-100 p-4 rounded-md mb-2 shadow-sm">
+                    No medical conditions reported. 
+                    <br />
+                    (This means the patient has not provided any medical history or conditions)
+                </li>
+            )}
+        </ul>
 
         <H2 className="text-xl font-semibold text-gray-700">
             AI Generated Health Summary
