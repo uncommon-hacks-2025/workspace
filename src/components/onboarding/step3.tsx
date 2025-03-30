@@ -12,11 +12,12 @@ import type { MedicalHistory } from "@/types/history";
 type HistoryCardProps = {
   history: MedicalHistory;
 
-  onHistoryChange: (history: MedicalHistory) => void;
+  onHistoryChange: (history: MedicalHistory, index: number) => void;
   onDelete: () => void;
+  index: number;
 };
 
-function HistoryCard({ history, onHistoryChange, onDelete }: HistoryCardProps) {
+function HistoryCard({ history, onHistoryChange, onDelete, index }: HistoryCardProps) {
   return (
     <div className={"p-4 bg-neutral-100 rounded-md flex flex-col gap-4"}>
       <div className={"flex gap-4 w-full"}>
@@ -29,7 +30,7 @@ function HistoryCard({ history, onHistoryChange, onDelete }: HistoryCardProps) {
               let newHistory = history;
               newHistory.condition = e.target.value;
 
-              onHistoryChange(newHistory);
+              onHistoryChange(newHistory, index);
             }}
           />
         </div>
@@ -50,16 +51,16 @@ function HistoryCard({ history, onHistoryChange, onDelete }: HistoryCardProps) {
           let newHistory = history;
           newHistory.status = e;
 
-          onHistoryChange(newHistory);
+          onHistoryChange(newHistory, index);
         }}
       >
         <div className="flex items-center space-x-2">
-          <RadioGroupItem value="Resolved" id="r1" />
-          <Label htmlFor="r1">Resolved</Label>
+          <RadioGroupItem value="Resolved" id={`r1_${index}`} />
+          <Label htmlFor={`r1_${index}`}>Resolved</Label>
         </div>
         <div className="flex items-center space-x-2">
-          <RadioGroupItem value="Ongoing" id="r2" />
-          <Label htmlFor="r2">Ongoing</Label>
+          <RadioGroupItem value="Ongoing" id={`r2_${index}`} />
+          <Label htmlFor={`r2_${index}`}>Ongoing</Label>
         </div>
       </RadioGroup>
     </div>
@@ -88,12 +89,17 @@ export default function OnboardingStep3({ value, onChange }: OnboardingProps) {
 
       {medicalHistory.map((val, index) => (
         <HistoryCard
+        index={index}
           key={index}
           history={val}
-          onHistoryChange={(updatedHistory) => {
+          onHistoryChange={(updatedHistory, index) => {
+            // Update the medical history at the specific index
             changeHistory(
-              medicalHistory.map((item, _index) => {
-                return _index === index ? updatedHistory : item;
+              medicalHistory.map((history, _index) => {
+                if (_index === index) {
+                  return updatedHistory; // Return the updated history for this index
+                }
+                return history; // Return the original history for other indices
               }),
             );
           }}

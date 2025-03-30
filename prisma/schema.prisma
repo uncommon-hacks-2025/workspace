@@ -100,6 +100,7 @@ model Feedback {
   id      String  @id
   answer1 String?
   answer2 String?
+  answer3 String?
 }
 
 model QRCode {
@@ -130,5 +131,5 @@ model JournalEntry {
   sleep            Decimal? @db.Decimal(3, 1)
   otherNotes       String?
   userId           String
-  User             User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userId")
+  User             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

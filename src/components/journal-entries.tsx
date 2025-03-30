@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 // import { User } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 type Entry = {
     id: string;
@@ -79,74 +81,70 @@ export default function JournalEntries() {
     
 
     return (
-        <div className="max-w-lg mx-auto p-4 bg-white shadow-md rounded-md">
+        <div className="w-full p-4 bg-white rounded-md">
             <h2 className="text-2xl font-bold mb-4">My Journal</h2>
 
             {/* Add New Entry Form */}
             <div className="mb-4">
-                <input
-                    type="text"
-                    placeholder="Title"
-                    value={entryTitle}
-                    onChange={(e) => setEntryTitle(e.target.value)}
-                    className="w-full p-2 border rounded mb-2"
+                <Input
+                type="text"
+                placeholder="Title"
+                value={entryTitle}
+                onChange={(e) => setEntryTitle(e.target.value)}
+                className="w-full p-2 border rounded mb-2"
                 />
-                <input
-                    type="date"
-                    value={entryDate}
-                    onChange={(e) => setEntryDate(e.target.value)}
-                    className="w-full p-2 border rounded mb-2"
+
+                <Input
+                type="date"
+                value={entryDate}
+                onChange={(e) => setEntryDate(e.target.value)}
+                className="w-full p-2 border rounded mb-2"
                 />
-                <input
-                    type="text"
-                    placeholder="Medications Taken (Optional)"
-                    value={medicationsTaken}
-                    onChange={(e) => setMedicationsTaken(e.target.value)}
-                    className="w-full p-2 border rounded mb-2"
+                <Input
+                 type="text"
+                 placeholder="Medications Taken (Optional)"
+                 value={medicationsTaken}
+                 onChange={(e) => setMedicationsTaken(e.target.value)}
+                 className="w-full p-2 border rounded mb-2"
                 />
-                <input
-                    type="text"
-                    placeholder="Symptoms Had (Optional)"
-                    value={symptomsHad}
-                    onChange={(e) => setSymptomsHad(e.target.value)}
-                    className="w-full p-2 border rounded mb-2"
+                <Input
+                type="text"
+                placeholder="Any Symptoms Experienced (Optional)"
+                
+                value={symptomsHad}
+                onChange={(e) => setSymptomsHad(e.target.value)}
+                className="w-full p-2 border rounded mb-2"
                 />
-                <input
-                    type="number"
-                    step="0.1"
-                    placeholder="Hours of Sleep (Optional)"
-                    value={sleep}
-                    onChange={(e) => setSleep(e.target.value)}
-                    className="w-full p-2 border rounded mb-2"
+
+                <Input
+                type="number"
+                step="0.1"
+                placeholder="Hours of Sleep (Optional)"
+                value={sleep}
+                onChange={(e) => setSleep(e.target.value)}
+                className="w-full p-2 border rounded mb-2"
                 />
+                
+            
                 <textarea
                     placeholder="Other Notes (Optional)"
                     value={otherNotes}
                     onChange={(e) => setOtherNotes(e.target.value)}
                     className="w-full p-2 border rounded mb-2"
                 ></textarea>
-                <button
-                    onClick={handleAddEntry}
-                    disabled={loading}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                <Button 
+                onClick={handleAddEntry}
+                disabled={loading}
+                variant={"solid"}
+                className={'w-full'}
                 >
-                    {loading ? "Adding..." : "Add Entry"}
-                </button>
+                    {loading ? (
+                        <span>Loading...</span>
+                    ) : (
+                        <span>Add Entry</span>
+                    )}
+                </Button>
             </div>
-
-            {/* Journal Entries List */}
-            <ul>
-                {entries.map((entry) => (
-                    <li key={entry.id} className="border-b py-2">
-                        <h3 className="font-semibold">{entry.entryTitle}</h3>
-                        <p><strong>Date:</strong> {new Date(entry.entryDate).toLocaleDateString()}</p>
-                        {entry.medicationsTaken && <p><strong>Medications:</strong> {entry.medicationsTaken}</p>}
-                        {entry.symptomsHad && <p><strong>Symptoms:</strong> {entry.symptomsHad}</p>}
-                        {entry.sleep !== undefined && <p><strong>Sleep:</strong> {entry.sleep} hours</p>}
-                        {entry.otherNotes && <p><strong>Notes:</strong> {entry.otherNotes}</p>}
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 }

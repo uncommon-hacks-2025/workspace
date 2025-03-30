@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +10,7 @@ import { useRouter } from "next/navigation";
 type NavButton = {
   title: string;
   href: string;
+  className?: string;
 };
 
 const navButtons: NavButton[] = [
@@ -17,8 +19,13 @@ const navButtons: NavButton[] = [
     href: "/code",
   },
   {
+    title: "Improve Mediary",
+    href: "/feedback",
+    className: "hidden md:inline-flex" // This will hide the button on small screens
+  },
+  {
     title: "Check in",
-    href: "/",
+    href: "/journal",
   },
 ];
 
@@ -35,7 +42,9 @@ export default function Navbar() {
         {navButtons.map((val, index) => {
           return (
             <Link key={index} href={val.href}>
-              <Button variant={"ghost"}>{val.title}</Button>
+              <Button variant={"ghost"}
+              className={cn(val.className)}
+              >{val.title}</Button>
             </Link>
           );
         })}

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     const feedbackId = uuidv4(); // Generate a random feedback ID
 
     // Extract feedback data from the request body
-    const { feedback1, feedback2 } = await request.json();
+    const { feedback1, feedback2, feedback3 } = await request.json();
 
     // Create a new feedback record in the database
     const newFeedback = await prisma.feedback.create({
@@ -18,6 +18,7 @@ export async function POST(request: Request) {
         id: feedbackId, // Assign the generated random feedback ID
         answer1: feedback1 || null, // Optional feedback1
         answer2: feedback2 || null, // Optional feedback2
+        answer3: feedback3 || null, // Optional feedback3
       },
     });
 

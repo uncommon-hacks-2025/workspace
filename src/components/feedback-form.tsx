@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 export function FeedbackForm() {
   const [feedback1, setFeedback1] = useState(""); // Feedback for the first question
   const [feedback2, setFeedback2] = useState(""); // Feedback for the second question
+  const [feedback3, setFeedback3] = useState(""); // Feedback for the second question
   const [submitted, setSubmitted] = useState(false); // Track if form is submitted
   const [error, setError] = useState(""); // Store error messages
 
@@ -29,6 +30,7 @@ export function FeedbackForm() {
         body: JSON.stringify({
           feedback1,
           feedback2,
+          feedback3,
         }),
       });
 
@@ -75,6 +77,19 @@ export function FeedbackForm() {
             placeholder="Write your feedback..."
             value={feedback2}
             onChange={(e) => setFeedback2(e.target.value)}
+            className="border p-2 rounded-md"
+          />
+         
+
+
+          <p>
+            3) What are your overall thoughts on the United States healthcare system and how Mediary fits into it?
+          </p>
+          <Input
+            type="text"
+            placeholder="Write your feedback..."
+            value={feedback3}
+            onChange={(e) => setFeedback3(e.target.value)}
             className="border p-2 rounded-md"
           />
           {error && <p className="text-red-600">{error}</p>}{" "}
