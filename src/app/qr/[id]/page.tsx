@@ -12,7 +12,7 @@ import { H2 } from "@/components/typography";
 export default async function QrSlugPage({
     params,
     }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
     }) {
     // This page is for QR code scanning and will handle the logic for it
     // You can implement QR code scanning logic here
