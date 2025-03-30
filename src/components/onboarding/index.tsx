@@ -21,7 +21,7 @@ export default function OnboardingCard() {
 
     return (
         <div
-        className={'flex flex-col gap-4'}
+        className={'flex flex-col gap-4 pb-20'}
         >
             
             {
