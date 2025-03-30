@@ -1,2 +1,2 @@
-'use client'
-export { signIn, signOut, useSession } from 'next-auth/react'
+"use client";
+export { signIn, signOut, useSession } from "next-auth/react";

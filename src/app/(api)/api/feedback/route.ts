@@ -15,16 +15,22 @@ export async function POST(request: Request) {
     // Create a new feedback record in the database
     const newFeedback = await prisma.feedback.create({
       data: {
-        id: feedbackId,  // Assign the generated random feedback ID
+        id: feedbackId, // Assign the generated random feedback ID
         answer1: feedback1 || null, // Optional feedback1
         answer2: feedback2 || null, // Optional feedback2
       },
     });
 
     // Return a success message
-    return NextResponse.json({ message: "Feedback submitted successfully!" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Feedback submitted successfully!" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error submitting feedback:", error);
-    return NextResponse.json({ error: "Failed to submit feedback" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to submit feedback" },
+      { status: 500 },
+    );
   }
 }
