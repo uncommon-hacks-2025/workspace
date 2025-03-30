@@ -13,8 +13,8 @@ type NavButton = {
 
 const navButtons: NavButton[] = [
   {
-    title: "Features",
-    href: "/",
+    title: "Get QR Code",
+    href: "/code",
   },
   {
     title: "Check in",
