@@ -11,6 +11,8 @@ import { useState } from "react";
 import type { QRCode as QRCodeModel } from "@prisma/client";
 import { updateQrCodePrivacy } from "@/backend/qr-code";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Clipboard } from "lucide-react";
 
 type QRCodeComponentProps = {
     value: QRCodeModel; // The value to encode in the QR code
@@ -66,7 +68,7 @@ export default function QRCodeComponent({ link, value, allowEditing = false }: Q
   return (
     <div>
       
-      <div className="text-center mb-4 flex items-center flex-col gap-2">
+      <div className="text-center mb-4 flex items-center flex-col gap-2 max-w-sm mx-auto">
         <h1 className="text-2xl font-bold">Your QR Code</h1>
         <p className="text-muted-foreground mb-4">
           Scan the QR code below to check in quickly!
@@ -79,12 +81,34 @@ export default function QRCodeComponent({ link, value, allowEditing = false }: Q
             fgColor={"#000000"} // Foreground color
             level={"M"} // Error correction level
         />
+         <div className="w-fit flex items-center bg-neutral-100 text-sm mt-2 pl-4 pr-1 py-1 rounded-md text-primary">
+          <a target={"_blank"} href={link} className="text-primary underline">
+          {/* Display the link to the QR code */}
+          {link}
+          {/* This will be the URL that the QR code points to when scanned */}
+        </a>
+        <Button
+          variant={'default'}
+          size={'icon'}
+          className="ml-2"
+          onClick={() => {
+            // Copy the link to clipboard
+            navigator.clipboard.writeText(link);
+            alert("Link copied to clipboard!");
+          }}
+          aria-label="Copy QR Code Link"
+          >
+          {/* Icon for copying the link */}
+          <Clipboard />
+          </Button>
+      </div>
       <div className="text-sm text-destructive mt-4 max-w-md">
         <p>
           Note: This QR code is unique to you and will be used for check-in.
           Please do not share it with anyone else.
         </p>
 
+     
        <div
        className={'flex flex-row gap-4 justify-center mt-4'}
        >

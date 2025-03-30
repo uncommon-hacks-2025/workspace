@@ -2,10 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 type NavButton = {
   title: string;
@@ -15,6 +14,10 @@ type NavButton = {
 
 const navButtons: NavButton[] = [
   {
+    title: "Journal",
+    href: "/journal",
+  },
+  {
     title: "Get QR Code",
     href: "/code",
   },
@@ -22,10 +25,6 @@ const navButtons: NavButton[] = [
     title: "Improve Mediary",
     href: "/feedback",
     className: "hidden md:inline-flex" // This will hide the button on small screens
-  },
-  {
-    title: "Check in",
-    href: "/journal",
   },
 ];
 
