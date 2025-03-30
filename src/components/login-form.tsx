@@ -14,7 +14,6 @@ export function LoginForm({
 
   const handleLogin =  async () => {
      await signIn("auth0")
-     console.log(signIn("auth0"))
   }
 
   return (
