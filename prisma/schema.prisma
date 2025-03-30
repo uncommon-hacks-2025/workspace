@@ -18,6 +18,7 @@ model User {
   updatedAt     DateTime        @updatedAt
   accounts      Account[]
   Authenticator Authenticator[]
+  JournalEntry  JournalEntry?
   Profile       Profile[]
   sessions      Session[]
 }
@@ -90,7 +91,7 @@ model MedicalCondition {
   diagnosedDate DateTime
   status        String
   treatments    String?
-  notes         String? // Additional notes about the condition
+  notes         String?
   profile       Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
@@ -98,4 +99,15 @@ model Feedback {
   id      String  @id
   answer1 String?
   answer2 String?
+}
+
+model JournalEntry {
+  id               String   @id
+  entryTitle       String
+  entryDate        DateTime @db.Date
+  medicationsTaken String?
+  symptomsHad      String?
+  sleep            Decimal? @db.Decimal(3, 1)
+  otherNotes       String?
+  User             User     @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userId")
 }
