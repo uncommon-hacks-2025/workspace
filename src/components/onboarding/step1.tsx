@@ -1,7 +1,12 @@
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-export default function OnboardingStep1() {
+type OnboardingProps = {
+    value: string;
+    onChange: (name: string) => void;
+}
+
+export default function OnboardingStep1({ value, onChange }: OnboardingProps) {
     return (
         <div
             className={'flex flex-col gap-1'}
@@ -11,7 +16,10 @@ export default function OnboardingStep1() {
             >
                 First thing&apos;s first, what&apos;s your full name?
             </Label>
-            <Input name="name" placeholder="Full name" />
+            <Input name="name" placeholder="Full name"
+            value={value}
+            onChange={(e) => {onChange(e.target.value)}}
+            />
             </div>
     )
 }

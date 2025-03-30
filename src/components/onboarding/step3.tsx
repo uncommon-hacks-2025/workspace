@@ -7,11 +7,7 @@ import { Plus, Trash } from "lucide-react";
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { P } from "../typography";
-
-type MedicalHistory = {
-    condition: string;
-    status: string;
-}
+import type { MedicalHistory } from "@/types/history";
 
 type HistoryCardProps = {
     history: MedicalHistory;
@@ -80,8 +76,19 @@ function HistoryCard({history, onHistoryChange, onDelete}: HistoryCardProps) {
             </div>
     )
 }
-export default function OnboardingStep3() {
-    const [medicalHistory, setMedicalHistory] = useState<MedicalHistory[]>([]);
+
+type OnboardingProps = {
+    value: MedicalHistory[];
+    onChange: (history: MedicalHistory[]) => void;
+}
+
+export default function OnboardingStep3({ value, onChange }: OnboardingProps) {
+    const [medicalHistory, setMedicalHistory] = useState<MedicalHistory[]>(value);
+
+    const changeHistory = (history: MedicalHistory[]) => {
+        setMedicalHistory(history);
+        onChange(history);
+    }
 
     return (
         <div
@@ -96,11 +103,12 @@ export default function OnboardingStep3() {
                     <HistoryCard key={index} 
                     history={val}
                     onHistoryChange={(updatedHistory) => {
-                        setMedicalHistory(medicalHistory.map((item, _index) => {
+
+                        changeHistory(medicalHistory.map((item, _index) => {
                             return _index === index ? updatedHistory : item;
                         }));
                     }}
-                    onDelete={() => setMedicalHistory(medicalHistory.filter((_, _index) => {
+                    onDelete={() => changeHistory(medicalHistory.filter((_, _index) => {
                         return index !== _index;
                     }))}
                     />
@@ -109,7 +117,7 @@ export default function OnboardingStep3() {
             <Button
             className={'h-12'}
             onClick={() => {
-                setMedicalHistory([
+                changeHistory([
                     ...medicalHistory, {
                         condition: "",
                         status: "Resolved"

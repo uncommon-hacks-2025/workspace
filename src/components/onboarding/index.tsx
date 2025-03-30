@@ -5,12 +5,14 @@ import { Button } from "../ui/button";
 import OnboardingStep1 from "./step1";
 import OnboardingStep2 from "./step2";
 import OnboardingStep3 from "./step3";
+import type { MedicalHistory } from "@/types/history";
 
 const maxSteps = 4;
 
 export default function OnboardingCard() {
     const [fullName, setFullname] = useState<string>("");
     const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
+    const [medicalHistory, setMedicalHistory] = useState<MedicalHistory[]>([]);
 
     const [step, setStep] = useState<number>(1);
     const percentageStep = Math.ceil((step/(maxSteps - 1)) * 100);
@@ -26,11 +28,11 @@ export default function OnboardingCard() {
             
             {
                 step === 1 ? (
-                    <OnboardingStep1 />
+                    <OnboardingStep1 value={fullName} onChange={(name) => setFullname(name)}/>
                 ) : (
                     step === 2 ? (
-                        <OnboardingStep2 />
-                    ) : <OnboardingStep3 />
+                        <OnboardingStep2 value={dateOfBirth} onChange={(date) => setDateOfBirth(date)} />
+                    ) : <OnboardingStep3 value={medicalHistory} onChange={(history) => setMedicalHistory(history)} />
                 )
             }
            
