@@ -15,10 +15,18 @@ export function LoginForm({
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6 items-center justify-center pb-40", className)} {...props}>
+
       <div
-      className={'flex flex-col gap-4'}
+      className={'flex flex-col gap-4 items-center justify-center'}
       >
+         <Image
+        src={'/logos/logo.svg'}
+        alt={'Auth0 Logo'}
+        width={56}
+        height={56}
+        className={'grayscale opacity-50'}
+        />
         <div
         className={'flex flex-col gap-2 items-center'}
         >
@@ -32,6 +40,7 @@ export function LoginForm({
         >
               
               <Button onClick={handleLogin} className="w-full py-8 border border-transparent hover:border-black transition-colors relative">
+
                 <Image
                 src={'/logos/auth0.svg'}
                 alt={'Auth0 Logo'}
