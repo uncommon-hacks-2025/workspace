@@ -1,6 +1,8 @@
 import { getProfileForUser } from "@/backend/profile";
-import { LoginForm } from "@/components/login-form";
-import { auth } from "@/lib/auth/providers";
+
+import { LoginForm } from "@/components/login-form"
+import { auth } from "@/lib/auth/providers"
+
 import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
