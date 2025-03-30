@@ -1,12 +1,19 @@
+"use client";
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { H2, P } from "./typography"
 import Image from "next/image"
+import { signIn } from "@/lib/auth/providers"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const handleLogin = async () => {
+    await signIn("auth0")
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div
@@ -24,7 +31,7 @@ export function LoginForm({
         className={'text-center'}
         >
               
-              <Button className="w-full py-8 border border-transparent hover:border-black transition-colors relative">
+              <Button onClick={handleLogin} className="w-full py-8 border border-transparent hover:border-black transition-colors relative">
                 <Image
                 src={'/logos/auth0.svg'}
                 alt={'Auth0 Logo'}

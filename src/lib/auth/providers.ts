@@ -5,6 +5,7 @@ import authConfig from "./configs";
 
 import Auth0Provider from "next-auth/providers/auth0";
 
+
 export const handler = NextAuth({
     ...authConfig,
     adapter: PrismaAdapter(prisma),
