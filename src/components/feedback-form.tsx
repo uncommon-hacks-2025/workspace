@@ -15,7 +15,7 @@ export function FeedbackForm() {
     e.preventDefault();
 
     // If no feedback is provided, show error
-    if (!feedback1.trim() && !feedback2.trim()) {
+    if (!feedback1.trim() && !feedback2.trim() && !feedback3.trim()) {
       setError("At least one feedback is required.");
       return;
     }
